@@ -1,0 +1,328 @@
+#+STARTUP: show1levels
+#+TITLE: "Set workaroud for haskell work (draft)"
+#+AUTHOR: "J/Z/Katsman"
+#+EMAIL:  "call89269081096@gmail.com"
+
+* Установка окружения для работы с haskell. Несколько полезных советов и рекомендаций 
+** Вместо предисловия:)
+"Буддхагхоса на основе Вимуттимагги составил новое *руководство*, Висуддхимаггу. На тот момент у него были широкие познания, но *практически никакого опыта практики*. Поэтому некоторые его объяснения по вопросам приемов практики несколько *противоречивы и не вполне ясны*. Он демонстрирует блестящую эрудицию в общих теоретических вопросах. Буддхагхоса в Висуддхимагге ввел новые теоретические модели, прежде всего,кханикаваду, - *учение о мгновенном существовании*, и в целом сместил ударение на теоретическое познание учения Будды. Затем он *скомпилировал* комментарий (Аттхакатха) на пали к большей части Типитаки, и *вернулся в Индию.*"
+
+** Я сделал эти советы и рекомендации с двумя целями
+Первая цель чтобы облегчить обучающимся вхождение в разработку haskell. Вторая цель, для того, чтобы собрать
+разрозненные записи в единый документ. На мой взгляд, до тех пор пока это не реализовано,
+работа с haskell, я имею в виду продуктивная работа, будет затруднена. 
+Это не совсем руководство, скорее это спасательный круг, который поможет вам 
+сэкономить много часов на поиски разрозненной и неполной информации (подскажет 
+что именно предполагается искать, и для чего
+
+** Установка Emacs как базового редактора
+
+В качестве базового редактора, мы будем использовать 
+emacs  версии с 26 по 27 (в расчете на самую дешевую и распространенную ubuntu). 
+#+BEGIN_SRC
+     sudo apt install build-essential texinfo libx11-dev libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libgtk2.0-dev libncurses-dev libgnutls28-dev
+
+     wget http://ftp.gnu.org/gnu/emacs/emacs-27.2.tar.gz
+     tar xvzf emacs-27.2.tar.gz
+
+     cd emacs-27.2
+     ./configure
+     make
+     sudo make install
+#+END_SRC
+Затем emacs надо будет сконфигурировать и установить evil-mode (vim совместимый режим работы emacs)
+
+** Устанавливаем расширения для работы с haskell
+
+Для того что бы выбирать версию  как самого haskell-я так и его 
+окружения используется специфический  инструмент (пакетный менеджер)
+
+[[https://www.haskell.org/ghcup/][ghcup]]
+#+BEGIN_SRC
+    curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+    ghcup tui
+#+END_SRC
+
+Также нужно установить языковой сервер haskell, для проверки синтаксиса на лету
+#+BEGIN_SRC
+    git clone https://github.com/haskell/haskell-language-server
+    cd haskell-language-server
+#+END_SRC
+
+Emacs-у требуются следующие компоненты: 
+ 
+[[https://github.com/emacs-lsp/lsp-haskell][lsp-haskell]]
+[[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]
+
+Эти модули скачивают и устанавливают в *~/.emacs.d/*
+#+BEGIN_SRC
+     ;; haskell 
+     (add-to-list 'load-path  "/home/useralex/.emacs.d/lsp-mode")
+     (require 'lsp-mode)
+
+     (add-to-list 'load-path "/home/useralex/.emacs.d/lsp-ui")
+     ;;(require 'lsp-ui)
+
+     (add-to-list 'load-path "/home/useralex/.emacs.d/lsp-haskell")
+     (require 'lsp-haskell)
+#+END_SRC
+Это не будет работать если не сделать в init.el 
+#+BEGIN_SRC
+     :lang
+     (haskell +lsp)
+#+END_SRC
+Посмотреть что у вас действительно стоит можно вот так:
+#+BEGIN_SRC
+     ls -la ~/.ghcup/bin/haskell-language-server*
+#+END_SRC
+
+Вообще посмотреть, что установлено на системе можно следующим образом:
+(How do I determine my GHC version?)
+
+Depending on your install method and architecture, some commands may differ. Some people may have several versions installed. Here is a selection of information that may be useful:
+
++ stack version: stack --version
++ ghc version: stack ghc -- --version
++ standard ghc version command: ghc --version
++ cabal version: cabal --version
++ GHC's repl: ghci --version
++ If using llvm with -fllvm flag (вдруг вам нужен LLVM): llvm-gcc -v
++ Если вам нужно сменить текущую версию HASKELL:  ghcup set ghc 8.10.7
++ Переустановить  версию языкового сервера  можно следующим образом: ghcup install hls
+
+В конфигурационном  файле  *.emacs*  должно стоять вот это:
+#+BEGIN_SRC
+      (require 'lsp)
+      (require 'lsp-haskell)
+
+      ;; Hooks so haskell and literate haskell major modes trigger LSP setup
+      (add-hook 'haskell-mode-hook #'lsp)
+      (add-hook 'haskell-literate-mode-hook #'lsp)
+      
+      ;;Tried to add hooks to literate-haskell-mode in two forms:
+      (add-hook 'literate-haskell-mode-hook #'lsp-haskell-enable)
+      (add-hook 'literate-haskell-mode-hook #'lsp)
+#+END_SRC
+в файле  ~/.emacs.d/init.el  Обязательно должно стоять вот так:
+#+BEGIN_SRC     
+      :lang
+      (haskell +lsp)
+#+END_SRC
+здесь мы включаем режим ЛИТЕРАТУРНОГО программирования руками. Нужно еще прикрутить latex
+но для этого нужно установить LiveTex 2022 (что бы избежать конфликтов многочисленных багов в модулях) 
+
+В конце можно попробовать включить режим:
+
+#+BEGIN_SRC
+    M-x  literate-haskell-mode
+#+END_SRC
+
+** Вывод кириллицы в GHCi
+
+Для того, чтобы в консоли GHCi нормально отображалась кириллица, можно сделать следующее (при условии, что установлена Haskell Platform):
+
++ Установить пакет wl-pprint: cabal install unescaping-print
++ потом нужно сделать так:  cabal install --lib unescaping-print
++ Создать в домашнем каталоге файл .ghci (расположение) со следующим содержимым: :set -interactive-print=UnescapingPrint.uprint
++ Нужно установить права на исполняемый файл:
+
+#+BEGIN_SRC
+         a@a:~/smth$ chmod 600 .ghci
+         a@a:~/smth$ chmod go-w .ghci
+#+END_SRC
+
++ Теперь можно пользоваться интерпретатором ghci с поддержкой кириллицы:
+#+BEGIN_SRC
+    $ ghci
+    GHCi, version 8.4.3: http://www.haskell.org/ghc/  :? for help
+    Loaded GHCi configuration from /home/bravit/.ghci
+    Prelude> "Привет, мир"
+    "Привет, мир"
+#+END_SRC
+Это работает только для версий не старше 8-ой. 
+
+Цитата "Полезно понимать причины поведения интерпретатора по умолчанию: вывод значений выражений выполняется функцией print, которая вызывает для своего аргумента функцию show. Последняя была определена более 20 лет назад и с тех пор практически не менялась, она заменяет любые не-ASCII символы на их коды. В предлагаемом решении мы фактически подменяем функцию print в ghci, что позволяет видеть кириллицу, а заодно и любые юникодные символы (разумеется, при наличии шрифтов) без изменений."
+
+** Компиляция и поддержка проекта
+
+Stack is a cross-platform program for developing Haskell projects. It is aimed at Haskellers both new and experienced.
+
+It features:
+
+- Installing GHC automatically, in an isolated location.
+- Installing packages needed for your project.
+- Building your project.
+- Testing your project.
+- Benchmarking your project.
+
+
+[[https://docs.haskellstack.org/en/stable/README/)[The Haskell Tool Stack]]
+
+Поставим стек.
+
+-- haskellstack.org
+
+       url -sSL https://get.haskellstack.org/ | sh
+      
+-- or (или):
+
+       wget -qO- https://get.haskellstack.org/ | sh
+
+Создадим новый проект:
+
+       stack new hello-world simple --resolver=lts-7.8
+
+Место где находится главный файл нового проекта:
+       
+#+BEGIN_SRC
+       cd  project -> src 
+       Main.hs
+           stack setup  --  если нужно устанавливаем изолированное окружение
+       stack exe hello-world
+#+END_SRC
+
+Компиляция: 
+       
+#+BEGIN_SRC
+       stack ghc -- -o TrsProgramm travers.hs
+#+END_SRC
+
+[[http://anton-k.github.io/ru-haskell-book/book/18.html][Средства разработки]]
+
+
+*** Eсли я захочу узнать время исполнения (Benchmark in GHCi)
+
+#+BEGIN_SRC
+     ghci> :set +s  -- показать время 
+     ghci> :set +t  -- показать типы 
+#+END_SRC
+
+
+*** Eсли я захочу видеть внутренний код исполняемой функции core
+
+[[https://runebook.dev/ru/docs/haskell/users_guide/using][haskell user guide]]
+
+#+BEGIN_SRC
+    ghc -c Foo.hs -ddump-simpl
+
+    stack exec ghc-core -- --no-asm Main.hs -fforce-recomp -O0 -fno-enable-rewrite-rules
+   
+    stack exec ghc -- Main.hs -fforce-recomp -O0 -fno-enable-rewrite-rules -ddump-stg > Main.stg
+#+END_SRC
+
+   или так...
+
+#+BEGIN_SRC
+    stack exec ghc      --                      ${filename}.hs -fforce-recomp -O0 -fno-enable-rewrite-rules -fllvm -keep-llvm-files
+    stack exec ghc-core -- --no-asm --no-syntax ${filename}.hs -fforce-recomp -O0 -fno-enable-rewrite-rules                > ${filename}.hcr
+    stack exec ghc      --                      ${filename}.hs -fforce-recomp -O0 -fno-enable-rewrite-rules -ddump-stg     > ${filename}.stg
+    stack exec ghc      --                      ${filename}.hs -fforce-recomp -O0 -fno-enable-rewrite-rules -ddump-opt-cmm > ${filename}.cmm
+#+END_SRC
+
+** Как сгенерировать pdf из lhs (literate mode)
+
+#+BEGIN_SRC
+a@a:~/algorithm$ lhs2TeX test2.lhs -o test2_new.tex
+a@a:~/algorithm$ xelatex -shell-escape test2_new.tex
+#+END_SRC
+
+** Kак узнать какие функции содержит модуль, не лазя в браузер
+Is there a way to see the list of functions in a module, in GHCI?
+Это ВАЖНО потому, что здесь мы получаем документацию к модулям, неизбежно для навигации по коду.
+
+1 - вариант 
+Prelude> :browse Data.List
+
+2 - вариант
+Prelude> :m +Data.List
+Prelude Data.List> Data.List.<PRESS TAB KEY HERE>
+Display all 109 possibilities? (y or n) <PRESS n>
+
+Data constructors and class methods are usually displayed in the context of their data type or class declaration. However, if the ! symbol is appended to the command, thus :browse!, they are listed individually. The !-form also annotates the listing with comments giving possible imports for each group of entries. Here is an example:
+
+Конструкторы данных и методы класса обычно показываются в контексте их типа данных или декларации класса. Однако если к команде прибавлен символ ! тут к browse, они будут показываться индивидуально, для каждой группы. 
+
+#+BEGIN_SRC
+Prelude> :browse! Data.Maybe
+-- not currently imported
+Data.Maybe.catMaybes :: [Maybe a] -> [a]
+Data.Maybe.fromJust :: Maybe a -> a
+Data.Maybe.fromMaybe :: a -> Maybe a -> a
+Data.Maybe.isJust :: Maybe a -> Bool
+Data.Maybe.isNothing :: Maybe a -> Bool
+Data.Maybe.listToMaybe :: [a] -> Maybe a
+Data.Maybe.mapMaybe :: (a -> Maybe b) -> [a] -> [b]
+Data.Maybe.maybeToList :: Maybe a -> [a]
+-- imported via Prelude
+Just :: a -> Maybe a
+data Maybe a = Nothing | Just a
+Nothing :: Maybe a
+maybe :: b -> (a -> b) -> Maybe a -> b
+#+END_SRC
+
+[[https://downloads.haskell.org/~ghc/8.4.1/docs/html/users_guide/ghci.html][Glasgow Haskell Compiler User's Guide]]
+
+** Kак определить какому модулю принадлежит функция 
+
+(Finding out which module a function belongs to exists that function:)
+Prelude> :! hoogle sort
+
+Можно определить в "~/.ghci"  конфигурационном файле алиас:
+
+:def hoogle \str -> return $ ":! hoogle \"" + + str + + "\""
+
+И тогда можно написать: Prelude> :hoogle sort
+
+In ghci (haskell) is there a command which will tell me which module (out of the loaded modules) a function belongs to. e.g. if the function is called whichMod, then it would work as follows :
+
+Prelude>whichMod take
+Prelude
+Prelude>whichMod sort
+Data.List
+
+Что-бы получить список привязок, находящихся в настоящее время в области видимости, 
+используйте команду 
+#+BEGIN_SRC
+:show bindings 
+#+END_SRC
+ 
+[3.Использование GHCi][https://runebook.dev/ru/docs/haskell/users_guide/ghci] 
+
+[[https://downloads.haskell.org/~ghc/8.4.1/docs/html/users_guide/ghci.html][Glasgow Haskell Compiler User's Guide]]
+
+** Unit - тестирование (требуется доработка)
+Getting started with HSpec and Tasty in Haskell?
+
+I'm new to Haskell and I'm trying to get
+*hspec*
+working with
+Tasty (using *tasty-hspec*) with Stack. https://hackage.haskell.org/package/tasty
+I've seen an example of using tasty with
+*HUnit* https://hackage.haskell.org/package/HUnit
+which looks like this:
+https://stackoverflow.com/questions/59342263/getting-started-with-hspec-and-tasty-in-haskell
+
+** Правильный способ собирать проект 
+
+В пустом каталоге создаем минимальный *stack.yaml* файл:
+#+BEGIN_SRC
+    resolver: lts-7.5
+    packages: []
+    extra-deps: []
+#+END_SRC
+
++ >> stack setup  - локальное окружение 
++ >> stack build Chart-diagrams 
++ >> stack runghc mychart.hs
++ >> stack path --local-install-root
++ >> inkview mychart.svg -- посмотреть что-то чем-то
+
+Найти то место, где лежит скомпилированный файл: 
+Узнать где (где?) в проекте stack лежит исполняемый файл, путь меня весьма изумил? 
+#+BEGIN_SRC
+   stack  path --local-intall-root 
+#+END_SRC
+
+[[https://github.com/timbod7/haskell-chart/wiki/Getting-started][Getting started]]
+
+
