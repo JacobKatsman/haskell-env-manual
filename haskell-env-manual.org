@@ -213,7 +213,7 @@ a@a:~/algorithm$ xelatex -shell-escape test2_new.tex
 #+END_SRC
 
 ** Kак узнать какие функции содержит модуль, не лазя в браузер
-Is there a way to see the list of functions in a module, in GHCI?
+ 
 Это ВАЖНО потому, что здесь мы получаем документацию к модулям, неизбежно для навигации по коду.
 
 1 - вариант 
