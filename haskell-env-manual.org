@@ -124,7 +124,7 @@ Depending on your install method and architecture, some commands may differ. Som
 + Нужно установить права на исполняемый файл:
 
 #+BEGIN_SRC
-         a@a:~/smth$ chmod 600 .ghci
+         
          a@a:~/smth$ chmod go-w .ghci
 #+END_SRC
 
