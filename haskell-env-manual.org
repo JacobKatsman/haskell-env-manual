@@ -220,8 +220,11 @@ Is there a way to see the list of functions in a module, in GHCI?
 Prelude> :browse Data.List
 
 2 - вариант
+
 Prelude> :m +Data.List
+
 Prelude Data.List> Data.List.<PRESS TAB KEY HERE>
+
 Display all 109 possibilities? (y or n) <PRESS n>
 
 Конструкторы данных и методы класса обычно показываются в контексте их типа данных или декларации класса. Однако если к команде прибавлен символ ! тут к browse, они будут показываться индивидуально, для каждой группы. 
