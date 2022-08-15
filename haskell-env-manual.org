@@ -63,12 +63,12 @@ Emacs-у требуются следующие компоненты:
      (add-to-list 'load-path "/home/useralex/.emacs.d/lsp-haskell")
      (require 'lsp-haskell)
 #+END_SRC
-Это не будет работать если не сделать в init.el 
+Это не будет работать, если не сделать в init.el 
 #+BEGIN_SRC
      :lang
      (haskell +lsp)
 #+END_SRC
-Посмотреть что у вас действительно стоит можно вот так:
+Посмотреть, что у вас действительно стоит можно вот так:
 #+BEGIN_SRC
      ls -la ~/.ghcup/bin/haskell-language-server*
 #+END_SRC
@@ -78,14 +78,14 @@ Emacs-у требуются следующие компоненты:
 
 Depending on your install method and architecture, some commands may differ. Some people may have several versions installed. Here is a selection of information that may be useful:
 
-+ stack version: stack --version
-+ ghc version: stack ghc -- --version
-+ standard ghc version command: ghc --version
-+ cabal version: cabal --version
-+ GHC's repl: ghci --version
-+ If using llvm with -fllvm flag (вдруг вам нужен LLVM): llvm-gcc -v
-+ Если вам нужно сменить текущую версию HASKELL:  ghcup set ghc 8.10.7
-+ Переустановить  версию языкового сервера  можно следующим образом: ghcup install hls
++ stack version: ~stack --version~
++ ghc version: ~stack ghc -- --version~
++ standard ghc version command: ~ghc --version~
++ cabal version: ~cabal --version~
++ GHC's repl: ~ghci --version~
++ If using llvm with -fllvm flag (вдруг вам нужен LLVM): ~llvm-gcc -v~
++ Если вам нужно сменить текущую версию HASKELL:  ~ghcup set ghc 8.10.7~
++ Переустановить  версию языкового сервера  можно следующим образом: ~ghcup install hls~
 
 В конфигурационном  файле  *.emacs*  должно стоять вот это:
 #+BEGIN_SRC
