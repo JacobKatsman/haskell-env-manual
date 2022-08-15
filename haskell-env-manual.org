@@ -142,17 +142,6 @@ Depending on your install method and architecture, some commands may differ. Som
 
 ** Компиляция и поддержка проекта
 
-Stack is a cross-platform program for developing Haskell projects. It is aimed at Haskellers both new and experienced.
-
-It features:
-
-- Installing GHC automatically, in an isolated location.
-- Installing packages needed for your project.
-- Building your project.
-- Testing your project.
-- Benchmarking your project.
-
-
 [[https://docs.haskellstack.org/en/stable/README/][The Haskell Tool Stack]]
 
 Поставим стек.
@@ -234,8 +223,6 @@ Prelude> :browse Data.List
 Prelude> :m +Data.List
 Prelude Data.List> Data.List.<PRESS TAB KEY HERE>
 Display all 109 possibilities? (y or n) <PRESS n>
-
-Data constructors and class methods are usually displayed in the context of their data type or class declaration. However, if the ! symbol is appended to the command, thus :browse!, they are listed individually. The !-form also annotates the listing with comments giving possible imports for each group of entries. Here is an example:
 
 Конструкторы данных и методы класса обычно показываются в контексте их типа данных или декларации класса. Однако если к команде прибавлен символ ! тут к browse, они будут показываться индивидуально, для каждой группы. 
 
