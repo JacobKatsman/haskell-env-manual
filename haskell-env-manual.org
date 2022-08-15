@@ -1,5 +1,5 @@
 #+STARTUP: show1levels
-#+TITLE: "Set environment for programming to haskell  (draft)"
+#+TITLE: "Setting up an environment for working with haskell. Some useful tips and tricks  (draft)"
 #+AUTHOR: "J/Z/Katsman"
 #+EMAIL:  "call89269081096@gmail.com"
 
