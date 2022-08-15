@@ -48,8 +48,8 @@ emacs  версии с 26 по 27 (в расчете на самую дешев�
 
 Emacs-у требуются следующие компоненты: 
  
-[[https://github.com/emacs-lsp/lsp-haskell][lsp-haskell]]
-[[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]
++ [[https://github.com/emacs-lsp/lsp-haskell][lsp-haskell]]
++ [[https://github.com/emacs-lsp/lsp-mode][lsp-mode]]
 
 Эти модули скачивают и устанавливают в *~/.emacs.d/*
 #+BEGIN_SRC
