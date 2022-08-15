@@ -302,7 +302,7 @@ https://stackoverflow.com/questions/59342263/getting-started-with-hspec-and-tast
 + >> inkview mychart.svg -- посмотреть что-то чем-то
 
 Найти то место, где лежит скомпилированный файл: 
-Узнать где (где?) в проекте stack лежит исполняемый файл.
+Узнать где в проекте stack лежит исполняемый файл.
 #+BEGIN_SRC
    stack  path --local-intall-root 
 #+END_SRC
