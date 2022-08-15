@@ -259,10 +259,10 @@ Prelude> :! hoogle sort
 
 In ghci (haskell) is there a command which will tell me which module (out of the loaded modules) a function belongs to. e.g. if the function is called whichMod, then it would work as follows :
 
-Prelude>whichMod take
-Prelude
-Prelude>whichMod sort
-Data.List
++ Prelude>whichMod take
++ Prelude
++ Prelude>whichMod sort
++ Data.List
 
 Что-бы получить список привязок, находящихся в настоящее время в области видимости, 
 используйте команду 
