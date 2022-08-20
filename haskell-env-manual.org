@@ -148,7 +148,7 @@ Depending on your install method and architecture, some commands may differ. Som
 
 -- haskellstack.org
 
-       url -sSL https://get.haskellstack.org/ | sh
+       curl -sSL https://get.haskellstack.org/ | sh
       
 -- or (или):
 
